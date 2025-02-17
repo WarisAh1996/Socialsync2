@@ -7,7 +7,30 @@ import { supabase } from '../lib/supabase';
 import { FaGoogle, FaGithub } from 'react-icons/fa';
 
 const testimonials = [
-  // ... existing testimonials
+  {
+    id: 1,
+    name: 'Sarah Johnson',
+    role: 'Marketing Director',
+    company: 'TechStart Inc.',
+    content: 'SocialSync has revolutionized our social media management. The ability to schedule posts across multiple platforms has saved us countless hours.',
+    avatar: 'https://randomuser.me/api/portraits/women/1.jpg'
+  },
+  {
+    id: 2,
+    name: 'Michael Chen',
+    role: 'Social Media Manager',
+    company: 'Global Brands',
+    content: 'The analytics and insights provided by SocialSync have helped us optimize our content strategy and increase engagement by 200%.',
+    avatar: 'https://randomuser.me/api/portraits/men/2.jpg'
+  },
+  {
+    id: 3,
+    name: 'Emma Davis',
+    role: 'Founder',
+    company: 'CreativeHub',
+    content: 'As a small business owner, SocialSync has been a game-changer. The intuitive interface and powerful features make social media management a breeze.',
+    avatar: 'https://randomuser.me/api/portraits/women/3.jpg'
+  }
 ];
 
 const SignupSchema = Yup.object().shape({
@@ -43,7 +66,6 @@ export default function SignupForm() {
       setError(null);
       setLoading(true);
       
-      // Sign up with Supabase
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -57,7 +79,6 @@ export default function SignupForm() {
 
       if (error) throw error;
 
-      // If successful, navigate to success page
       navigate('/success', { 
         state: { 
           message: "Please check your email to confirm your account." 
@@ -97,10 +118,10 @@ export default function SignupForm() {
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-      <div className="flex flex-col justify-center px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+      {/* Signup Form Section */}
+      <div className="flex flex-col justify-center px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden order-2 lg:order-1">
         <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 shape-blob"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 shape-blob"></div>
-        
         <div className="max-w-md w-full mx-auto relative">
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
             Create your account
@@ -208,13 +229,13 @@ export default function SignupForm() {
                     </div>
                   </div>
 
-                  <div className="mt-6">
+                  <div>
                     <button
                       type="submit"
-                      disabled={isSubmitting || loading}
-                      className="h-12 w-full flex justify-center items-center px-6 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-shadow disabled:opacity-50"
+                      disabled={loading || isSubmitting}
+                      className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
                     >
-                      {isSubmitting ? 'Creating account...' : 'Create Account'}
+                      {loading ? 'Creating account...' : 'Create account'}
                     </button>
                   </div>
                 </Form>
@@ -224,9 +245,48 @@ export default function SignupForm() {
         </div>
       </div>
 
-      {/* Testimonials Section (unchanged) */}
-      <div className="hidden lg:block bg-gradient-to-br from-primary to-secondary">
-        {/* ... existing testimonials code ... */}
+      {/* Testimonials Section */}
+      <div className="hidden lg:flex items-center justify-center bg-primary text-white p-12 relative overflow-hidden order-1 lg:order-2">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-90"></div>
+        <div className="relative z-10 max-w-xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">What our users say</h2>
+          <AnimatePresence mode='wait'>
+            <motion.div
+              key={currentTestimonial}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-4"
+            >
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white/20">
+                <img
+                  src={testimonials[currentTestimonial].avatar}
+                  alt={testimonials[currentTestimonial].name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <blockquote className="text-xl italic mb-4">
+                "{testimonials[currentTestimonial].content}"
+              </blockquote>
+              <div className="font-semibold">
+                {testimonials[currentTestimonial].name}
+              </div>
+              <div className="text-sm opacity-80">
+                {testimonials[currentTestimonial].role} at {testimonials[currentTestimonial].company}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+          <div className="flex justify-center space-x-2 mt-8">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentTestimonial(index)}
+                className={`w-2 h-2 rounded-full transition-all ${index === currentTestimonial ? 'bg-white w-4' : 'bg-white/50'}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

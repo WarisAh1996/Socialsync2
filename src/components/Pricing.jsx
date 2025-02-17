@@ -38,6 +38,19 @@ const plans = [
       'Custom analytics',
     ],
   },
+  {
+    id: 'enterprise-plus',
+    name: 'Enterprise Plus',
+    price: '199',
+    features: [
+      'All Enterprise features',
+      'White-label solution',
+      'Multi-brand management',
+      'Advanced security features',
+      'Custom AI solutions',
+      '24/7 Premium support',
+    ],
+  },
 ];
 
 export default function Pricing() {
@@ -61,7 +74,7 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-3">
+        <div className="mt-16 grid gap-8 lg:grid-cols-4">
           {plans.map((plan) => (
             <div
               key={plan.id}
